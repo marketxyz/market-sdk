@@ -14,17 +14,6 @@ import Addrs from "../constants/addrs";
 export interface MarketOptions {
   poolDirectory: string;
   poolLens: string;
-  blocksPerMin: number;
-  bytecodeHashes: {
-    oracle: {
-      [key: string]: string
-    },
-    irm: {
-      JumpRateModel: string;
-      JumpRateModelV2: string;
-    }
-  };
-  ownedAccounts: string[];
 };
 
 class MarketSDK {
@@ -55,13 +44,14 @@ class MarketSDK {
   async init(){
     if(!this.options){
       const chainId = await this.web3.eth.getChainId();
-      this.options = Addrs[chainId as keyof typeof Addrs];
+      this.options = {
+        poolDirectory: Addrs[chainId as keyof typeof Addrs].v1.poolDirectory,
+        poolLens: Addrs[chainId as keyof typeof Addrs].v1.poolLens
+      } 
     }
-    const lensV1Address = this.options.poolLens;
-    const poolDirectoryAddress = this.options.poolDirectory;
 
-    this.lens.v1 = new PoolLensV1(this, lensV1Address);
-    this.poolDirectory.v1 = new PoolDirectoryV1(this, poolDirectoryAddress);
+    this.lens.v1 = new PoolLensV1(this, this.options.poolLens);
+    this.poolDirectory.v1 = new PoolDirectoryV1(this, this.options.poolDirectory);
   }
 
   getAllPools(): Promise<{

@@ -1,10 +1,11 @@
 import { MarketSDK } from "../src";
 import HDWalletProvider from "@truffle/hdwallet-provider";
 import Web3 from "web3";
+import { DEFAULT_RPC, getPrivateKey } from "./utils";
 
 (async function () {
   try {
-    const provider = new HDWalletProvider(process.env.PRIVATE_KEY!, "https://matic-mainnet-full-rpc.bwarelabs.com");
+    const provider = new HDWalletProvider(getPrivateKey(), DEFAULT_RPC);
     const web3 = new Web3(provider);
     const sdk = await MarketSDK.init(web3);
 
@@ -14,8 +15,10 @@ import Web3 from "web3";
 
     // Use any comtroller method
     console.log(await comptroller.adminHasRights());
-    console.log(await comptroller._setLiquidationIncentive(10, { from: admin }));
-  } catch(error){
+    console.log(
+      await comptroller._setLiquidationIncentive(10, { from: admin })
+    );
+  } catch (error) {
     console.error(error);
   }
 })();
