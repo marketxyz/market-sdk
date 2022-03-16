@@ -3,7 +3,7 @@ import MarketAdmin from "./lib/MarketAdmin";
 import Comptroller from "./lib/Comptroller";
 import CToken from "./lib/CToken";
 import MarketSDK from "./lib/MarketSDK";
-import Addrs from "./constants/addrs";
+import MarketAddrs from "./constants/addrs";
 
 export * from "./lib/Pool";
 export * from "./lib/PoolLens";
@@ -15,5 +15,5 @@ export {
   MarketAdmin,
   MarketContract,
   MarketSDK,
-  Addrs
+  MarketAddrs
 };

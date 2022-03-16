@@ -9,22 +9,11 @@ import { PoolDirectoryV1, PoolDirectoryV2 } from "./PoolDirectory";
 import { Pool, PoolAsset } from "./Pool";
 import { PoolLensV1, PoolLensV2 } from "./PoolLens";
 
-import Addrs from "../constants/addrs";
+import MarketAddrs from "../constants/addrs";
 
 export interface MarketOptions {
   poolDirectory: string;
   poolLens: string;
-  blocksPerMin: number;
-  bytecodeHashes: {
-    oracle: {
-      [key: string]: string
-    },
-    irm: {
-      JumpRateModel: string;
-      JumpRateModelV2: string;
-    }
-  };
-  ownedAccounts: string[];
 };
 
 class MarketSDK {
@@ -55,7 +44,7 @@ class MarketSDK {
   async init(){
     if(!this.options){
       const chainId = await this.web3.eth.getChainId();
-      this.options = Addrs[chainId as keyof typeof Addrs];
+      this.options = MarketAddrs[chainId as keyof typeof MarketAddrs].v1;
     }
     const lensV1Address = this.options.poolLens;
     const poolDirectoryAddress = this.options.poolDirectory;
