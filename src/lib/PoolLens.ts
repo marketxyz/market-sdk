@@ -11,7 +11,7 @@ import PoolLensV2Artifact from "../abi/PoolLensV2.json";
 
 import Comptroller from "./Comptroller";
 import CToken from "./CToken";
-import { PoolDirectoryV1, PoolDirectoryV2 } from "./PoolDirectory";
+import PoolDirectory from "./PoolDirectory";
 
 import {
   Pool,
@@ -290,19 +290,11 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
 
   async directory(
     tx?: NonPayableTx
-  ): Promise<PoolDirectoryV1> {
+  ): Promise<PoolDirectory> {
     const diirectoryAddress = await this.contract.methods.directory().call(tx);
 
-    return new PoolDirectoryV1(this.sdk, diirectoryAddress);
+    return new PoolDirectory(this.sdk, diirectoryAddress);
   }
-
-  // async directoryV2(
-  //   tx?: NonPayableTx
-  // ): Promise<PoolDirectoryV2> {
-  //   const diirectoryAddress = await this.contract.methods.directory().call(tx);
-
-  //   return new PoolDirectoryV2(this.sdk, diirectoryAddress);
-  // }
 
   async getPoolOwnership(
     comptroller: Comptroller | string,
