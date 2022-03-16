@@ -41,13 +41,14 @@ class MarketSDK {
   async init(){
     if(!this.options){
       const chainId = await this.web3.eth.getChainId();
-      this.options = MarketAddrs[chainId as keyof typeof MarketAddrs].v1;
+      this.options = {
+        poolDirectory: MarketAddrs[chainId as keyof typeof MarketAddrs].v1.poolDirectory,
+        poolLens: MarketAddrs[chainId as keyof typeof MarketAddrs].v1.poolLens
+      } 
     }
-    const lensV1Address = this.options.poolLens;
-    const poolDirectoryAddress = this.options.poolDirectory;
 
-    this.lens.v1 = new PoolLensV1(this, lensV1Address);
-    this.poolDirectory = new PoolDirectory(this, poolDirectoryAddress);
+    this.lens.v1 = new PoolLensV1(this, this.options.poolLens);
+    this.poolDirectory = new PoolDirectory(this, this.options.poolDirectory);
   }
 
   getAllPools(): Promise<{

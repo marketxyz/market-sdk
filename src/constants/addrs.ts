@@ -17,7 +17,8 @@ export default {
     v1: {
       poolDirectory: "0x1c4D63bDA492d69f2D6b02Fb622fb6c49cc401d2",
       poolLens: "0x56563aB1740539983Ff4D487Ea3a3e47e23A19F9",
-    }
+    },
+    v2: {}
   },
   1285: {
     v1: {
