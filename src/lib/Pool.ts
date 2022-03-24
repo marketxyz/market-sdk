@@ -204,4 +204,10 @@ export interface PoolOwnership {
   comptrollerAdminHasRights: boolean,
   comptrollerFuseAdminHasRights: boolean,
   outliners: CTokenOwnership[],
-};
+}
+
+export interface UserSummary {
+  supplyBalance: BN,
+  borrowBalance: BN,
+  errors: boolean
+}

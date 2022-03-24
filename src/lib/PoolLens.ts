@@ -25,7 +25,8 @@ import {
   serializePool,
   PoolsData,
   PoolSummary,
-  PoolOwnership
+  PoolOwnership,
+  UserSummary
 } from "./Pool";
 import { NonPayableTx } from "../types/types";
 
@@ -95,16 +96,14 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
     comptroller: Comptroller | string,
     account: string,
     tx?: NonPayableTx
-  ): Promise<{
-    supplyBalance: BN,
-    borrowBalance: BN
-  }> {
+  ): Promise<UserSummary> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     const raw = await this.contract.methods.getPoolUserSummary(comptroller, account).call(tx);
 
     return {
       supplyBalance: new BN(raw[0]),
       borrowBalance: new BN(raw[1]),
+      errors: false // This is always false for v1
     };
   }
 
@@ -197,13 +196,9 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
   async getUserSummary(
     account: string,
     tx?: NonPayableTx
-  ): Promise<{
-    supplyBalance: BN,
-    borrowBalance: BN,
-    errors: boolean
-  }> {
+  ): Promise<UserSummary> {
     const raw = await this.contract.methods.getUserSummary(account).call(tx);
-    
+
     return {
       supplyBalance: new BN(raw[0]),
       borrowBalance: new BN(raw[1]),
