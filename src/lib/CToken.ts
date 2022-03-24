@@ -48,10 +48,11 @@ class CToken extends MarketContract<CTokenWeb3Interface> {
   }
 
   _setComptroller(
-    newComptroller: Comptroller,
+    newComptroller: Comptroller | string,
     tx?: NonPayableTx
   ): PromiEvent<TransactionReceipt> {
-    return this.contract.methods._setComptroller(newComptroller.address).send(tx);
+    newComptroller = newComptroller instanceof Comptroller ? newComptroller.address : newComptroller;
+    return this.contract.methods._setComptroller(newComptroller).send(tx);
   }
 
   _setFuseFee(
@@ -129,8 +130,8 @@ class CToken extends MarketContract<CTokenWeb3Interface> {
     owner: string,
     spender: string,
     tx?: NonPayableTx
-  ): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.allowance(owner, spender).send(tx);
+  ): Promise<string> {
+    return this.contract.methods.allowance(owner, spender).call(tx);
   }
 
   approve(

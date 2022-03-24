@@ -11,7 +11,7 @@ import PoolLensV2Artifact from "../abi/PoolLensV2.json";
 
 import Comptroller from "./Comptroller";
 import CToken from "./CToken";
-import { PoolDirectoryV1, PoolDirectoryV2 } from "./PoolDirectory";
+import PoolDirectory from "./PoolDirectory";
 
 import {
   Pool,
@@ -103,14 +103,14 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
     account: string,
     tx?: NonPayableTx
   ): Promise<{
-    suppluBalance: BN,
+    supplyBalance: BN,
     borrowBalance: BN
   }> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     const raw = await this.contract.methods.getPoolUserSummary(comptroller, account).call(tx);
 
     return {
-      suppluBalance: new BN(raw[0]),
+      supplyBalance: new BN(raw[0]),
       borrowBalance: new BN(raw[1]),
     };
   }
@@ -290,19 +290,11 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
 
   async directory(
     tx?: NonPayableTx
-  ): Promise<PoolDirectoryV1> {
+  ): Promise<PoolDirectory> {
     const diirectoryAddress = await this.contract.methods.directory().call(tx);
 
-    return new PoolDirectoryV1(this.sdk, diirectoryAddress);
+    return new PoolDirectory(this.sdk, diirectoryAddress);
   }
-
-  // async directoryV2(
-  //   tx?: NonPayableTx
-  // ): Promise<PoolDirectoryV2> {
-  //   const diirectoryAddress = await this.contract.methods.directory().call(tx);
-
-  //   return new PoolDirectoryV2(this.sdk, diirectoryAddress);
-  // }
 
   async getPoolOwnership(
     comptroller: Comptroller | string,
@@ -325,6 +317,7 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
   }
 
   async getPoolSummary(
+    comptroller: Comptroller | string,
     tx?: NonPayableTx
   ): Promise<{
     totalSupply: BN,
@@ -332,7 +325,8 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
     underlyingTokens: string[],
     underlyingSymbols: string[],
   }> {
-    const raw = await this.contract.methods.getPoolSummary(this.address).call(tx);
+    comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
+    const raw = await this.contract.methods.getPoolSummary(comptroller).call(tx);
 
     return {
       totalSupply: new BN(raw[0]),

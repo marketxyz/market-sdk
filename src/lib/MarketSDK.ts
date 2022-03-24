@@ -4,12 +4,12 @@ import BN from "bn.js";
 import Comptroller from "./Comptroller";
 import MarketAdmin from "./MarketAdmin";
 import CToken from "./CToken";
-import { PoolDirectoryV1, PoolDirectoryV2 } from "./PoolDirectory";
+import PoolDirectory from "./PoolDirectory";
 
 import { Pool, PoolAsset } from "./Pool";
 import { PoolLensV1, PoolLensV2 } from "./PoolLens";
 
-import Addrs from "../constants/addrs";
+import MarketAddrs from "../constants/addrs";
 
 export interface MarketOptions {
   poolDirectory: string;
@@ -20,10 +20,7 @@ class MarketSDK {
   readonly web3: Web3;
   options?: MarketOptions;
 
-  poolDirectory: {
-    v1?: PoolDirectoryV1,
-    v2?: PoolDirectoryV2
-  } = {};
+  poolDirectory?: PoolDirectory;
 
   lens: {
     v1?: PoolLensV1,
@@ -45,13 +42,13 @@ class MarketSDK {
     if(!this.options){
       const chainId = await this.web3.eth.getChainId();
       this.options = {
-        poolDirectory: Addrs[chainId as keyof typeof Addrs].v1.poolDirectory,
-        poolLens: Addrs[chainId as keyof typeof Addrs].v1.poolLens
+        poolDirectory: MarketAddrs[chainId as keyof typeof MarketAddrs].v1.poolDirectory,
+        poolLens: MarketAddrs[chainId as keyof typeof MarketAddrs].v1.poolLens
       } 
     }
 
     this.lens.v1 = new PoolLensV1(this, this.options.poolLens);
-    this.poolDirectory.v1 = new PoolDirectoryV1(this, this.options.poolDirectory);
+    this.poolDirectory = new PoolDirectory(this, this.options.poolDirectory);
   }
 
   getAllPools(): Promise<{
