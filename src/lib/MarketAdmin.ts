@@ -9,6 +9,28 @@ import { NonPayableTx } from "../types/types";
 import Comptroller from "./Comptroller";
 import MarketSDK from "./MarketSDK";
 
+export enum CTokenActions {
+  MINT = 0,
+  BORROW = 1
+}
+
+export enum GlobalActions {
+  TRANSFER = 0,
+  SEIZE = 1
+}
+
+export interface DeployMarketData {
+  underlying: string;
+  irm: string;
+  name: string;
+  symbol: string;
+  impl: string;
+  data: string | number[];
+  reserveFactor: number | string | BN;
+  adminFee: number | string | BN;
+  collateralFactorMantissa: number | string | BN;
+}
+
 class MarketAdmin extends MarketContract<MarketAdminWeb3Interface> {
   constructor(sdk: MarketSDK, address: string){
     super(sdk, address, MarketAdminArtifact.abi);
@@ -35,7 +57,10 @@ class MarketAdmin extends MarketContract<MarketAdminWeb3Interface> {
   }
 
   deployMarket(
-    deployData: [
+    deployData: DeployMarketData,
+    tx?: NonPayableTx,
+  ): PromiEvent<TransactionReceipt> {
+    const serializedDeployData: [
       string,
       string,
       string,
@@ -44,11 +69,19 @@ class MarketAdmin extends MarketContract<MarketAdminWeb3Interface> {
       string | number[],
       number | string | BN,
       number | string | BN,
-      number | string | BN
-    ],
-    tx?: NonPayableTx,
-  ): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.deployMarket(deployData).send(tx);
+      number | string | BN,
+    ] = [
+      deployData.underlying,
+      deployData.irm,
+      deployData.name,
+      deployData.symbol,
+      deployData.impl,
+      deployData.data,
+      deployData.reserveFactor,
+      deployData.adminFee,
+      deployData.collateralFactorMantissa
+    ];
+    return this.contract.methods.deployMarket(serializedDeployData).send(tx);
   }
 
   async isMarketAdmin(
@@ -100,7 +133,7 @@ class MarketAdmin extends MarketContract<MarketAdminWeb3Interface> {
 
   setCTokenActionState(
     cToken: string,
-    action: string | number,
+    action: CTokenActions,
     state: boolean,
     tx?: NonPayableTx,
   ): PromiEvent<TransactionReceipt> {
@@ -123,7 +156,7 @@ class MarketAdmin extends MarketContract<MarketAdminWeb3Interface> {
   }
 
   setGlobalActionState(
-    action: string | number,
+    action: GlobalActions,
     state: boolean,
     tx?: NonPayableTx,
   ): PromiEvent<TransactionReceipt> {

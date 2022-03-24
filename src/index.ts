@@ -8,6 +8,7 @@ import MarketAddrs from "./constants/addrs";
 
 export * from "./lib/Pool";
 export * from "./lib/PoolLens";
+export * from "./lib/MarketSDK";
 
 export {
   Comptroller,
