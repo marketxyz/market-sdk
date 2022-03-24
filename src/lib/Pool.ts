@@ -198,3 +198,10 @@ export interface PoolSummary {
   underlyingTokens: string[],
   underlyingSymbols: string[],
 }
+
+export interface PoolOwnership {
+  comptrollerAdmin: string,
+  comptrollerAdminHasRights: boolean,
+  comptrollerFuseAdminHasRights: boolean,
+  outliners: CTokenOwnership[],
+};

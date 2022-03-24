@@ -24,7 +24,8 @@ import {
   normalizeCTokenOwnership,
   serializePool,
   PoolsData,
-  PoolSummary
+  PoolSummary,
+  PoolOwnership
 } from "./Pool";
 import { NonPayableTx } from "../types/types";
 
@@ -51,12 +52,7 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
   async getPoolOwnership(
     comptroller: Comptroller | string,
     tx?: NonPayableTx
-  ): Promise<{
-    comptrollerAdmin: string,
-    comptrollerAdminHasRights: boolean,
-    comptrollerFuseAdminHasRights: boolean,
-    outliners: CTokenOwnership[],
-  }> {
+  ): Promise<PoolOwnership> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
 
     const raw = await this.contract.methods.getPoolOwnership(comptroller).call(tx);
@@ -264,12 +260,7 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
   async getPoolOwnership(
     comptroller: Comptroller | string,
     tx?: NonPayableTx
-  ): Promise<{
-    comptrollerAdmin: string,
-    comptrollerAdminHasRights: boolean,
-    comptrollerFuseAdminHasRights: boolean,
-    outliners: CTokenOwnership[]
-  }> {
+  ): Promise<PoolOwnership> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     const raw = await this.contract.methods.getPoolOwnership(comptroller).call(tx);
 
