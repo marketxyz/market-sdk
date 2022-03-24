@@ -9,6 +9,7 @@ import { PoolDirectory as PoolDirectoryWeb3Interface } from "../types/PoolDirect
 
 import MarketSDK from "./MarketSDK";
 import { Pool, normalizePool } from "./Pool";
+import Comptroller from "./Comptroller";
 
 class PoolDirectory extends MarketContract<PoolDirectoryWeb3Interface> {
   constructor(sdk: MarketSDK, address: string){
@@ -30,9 +31,10 @@ class PoolDirectory extends MarketContract<PoolDirectoryWeb3Interface> {
   }
 
   bookmarkPool(
-    comptroller: string,
+    comptroller: string | Comptroller,
     tx?: NonPayableTx
   ): PromiEvent<TransactionReceipt> {
+    comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     return this.contract.methods.bookmarkPool(comptroller).send(tx);
   }
 
@@ -56,7 +58,7 @@ class PoolDirectory extends MarketContract<PoolDirectoryWeb3Interface> {
     return this.contract.methods.deployerWhitelist(arg0).send(tx);
   }
 
-  enforeceDeployerWHitelist(
+  enforeceDeployerWhitelist(
     tx?: NonPayableTx
   ): PromiEvent<TransactionReceipt> {
     return this.contract.methods.enforceDeployerWhitelist().send(tx);

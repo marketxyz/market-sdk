@@ -103,14 +103,14 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
     account: string,
     tx?: NonPayableTx
   ): Promise<{
-    suppluBalance: BN,
+    supplyBalance: BN,
     borrowBalance: BN
   }> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     const raw = await this.contract.methods.getPoolUserSummary(comptroller, account).call(tx);
 
     return {
-      suppluBalance: new BN(raw[0]),
+      supplyBalance: new BN(raw[0]),
       borrowBalance: new BN(raw[1]),
     };
   }
@@ -317,6 +317,7 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
   }
 
   async getPoolSummary(
+    comptroller: Comptroller | string,
     tx?: NonPayableTx
   ): Promise<{
     totalSupply: BN,
@@ -324,7 +325,8 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
     underlyingTokens: string[],
     underlyingSymbols: string[],
   }> {
-    const raw = await this.contract.methods.getPoolSummary(this.address).call(tx);
+    comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
+    const raw = await this.contract.methods.getPoolSummary(comptroller).call(tx);
 
     return {
       totalSupply: new BN(raw[0]),

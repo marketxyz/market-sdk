@@ -380,7 +380,7 @@ class Comptroller extends MarketContract<ComptrollerWeb3Interface> {
   liquidateCalculateSeizeTokens(
     cTokenBorrowed: CToken | string,
     cTokenCollateral: CToken | string,
-    acountRepayAmount: number | string | BN,
+    accountRepayAmount: number | string | BN,
     tx?: NonPayableTx
   ): Promise<{
     0: string;
@@ -388,7 +388,7 @@ class Comptroller extends MarketContract<ComptrollerWeb3Interface> {
   }> {
     cTokenBorrowed = cTokenBorrowed instanceof CToken ? cTokenBorrowed.address : cTokenBorrowed;
     cTokenCollateral = cTokenCollateral instanceof CToken ? cTokenCollateral.address : cTokenCollateral;
-    return this.contract.methods.liquidateCalculateSeizeTokens(cTokenBorrowed, cTokenCollateral, acountRepayAmount).call(tx);
+    return this.contract.methods.liquidateCalculateSeizeTokens(cTokenBorrowed, cTokenCollateral, accountRepayAmount).call(tx);
   }
 
   liquidationIncentiveMantissa(
