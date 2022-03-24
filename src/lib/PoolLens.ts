@@ -23,7 +23,8 @@ import {
   normalizePoolUser,
   normalizeCTokenOwnership,
   serializePool,
-  PoolsData
+  PoolsData,
+  PoolSummary
 } from "./Pool";
 import { NonPayableTx } from "../types/types";
 
@@ -82,12 +83,7 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
   async getPoolSummary(
     comptroller: Comptroller | string,
     tx?: NonPayableTx
-  ): Promise<{
-    totalSupply: BN,
-    totalBorrow: BN,
-    underlyingTokens: string[],
-    underlyingSymbols: string[],
-  }> {
+  ): Promise<PoolSummary> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     const raw = await this.contract.methods.getPoolSummary(comptroller).call(tx);
 
@@ -288,12 +284,7 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
   async getPoolSummary(
     comptroller: Comptroller | string,
     tx?: NonPayableTx
-  ): Promise<{
-    totalSupply: BN,
-    totalBorrow: BN,
-    underlyingTokens: string[],
-    underlyingSymbols: string[],
-  }> {
+  ): Promise<PoolSummary> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     const raw = await this.contract.methods.getPoolSummary(comptroller).call(tx);
 

@@ -190,4 +190,11 @@ export interface PoolsData {
   underlyingTokens: string[][];
   underlyingSymbols: string[][];
   errored: boolean[];
-};
+}
+
+export interface PoolSummary {
+  totalSupply: BN,
+  totalBorrow: BN,
+  underlyingTokens: string[],
+  underlyingSymbols: string[],
+}
