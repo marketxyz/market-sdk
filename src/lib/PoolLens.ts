@@ -22,7 +22,8 @@ import {
   normalizePoolAsset,
   normalizePoolUser,
   normalizeCTokenOwnership,
-  serializePool
+  serializePool,
+  PoolsData
 } from "./Pool";
 import { NonPayableTx } from "../types/types";
 
@@ -118,15 +119,7 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
   async getPoolsByAccountWithData(
     account: string,
     tx?: NonPayableTx
-  ): Promise<{
-    indexes: BN[],
-    pools: Pool[],
-    totalSupply: BN[],
-    totalBorrow: BN[],
-    underlyingTokens: string[][],
-    underlyingSymbols: string[][],
-    errored: boolean[],
-  }> {
+  ): Promise<PoolsData> {
     const raw = await this.contract.methods.getPoolsByAccountWithData(account).call(tx);
 
     return {
@@ -158,15 +151,7 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
   async getPoolsBySupplierWithData(
     supplier: string,
     tx?: NonPayableTx
-  ): Promise<{
-    indexes: BN[],
-    pools: Pool[],
-    totalSupply: BN[],
-    totalBorrow: BN[],
-    underlyingTokens: string[][],
-    underlyingSymbols: string[][],
-    errored: boolean[],
-  }> {
+  ): Promise<PoolsData> {
     const raw = await this.contract.methods.getPoolsBySupplierWithData(supplier).call(tx);
 
     return {
@@ -203,15 +188,7 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
 
   async getPublicPoolsWithData(
     tx?: NonPayableTx
-  ): Promise<{
-    indexes: BN[],
-    pools: Pool[],
-    totalSupply: BN[],
-    totalBorrow: BN[],
-    underlyingTokens: string[][],
-    underlyingSymbols: string[][],
-    errored: boolean[],
-  }> {
+  ): Promise<PoolsData> {
     const raw = await this.contract.methods.getPublicPoolsWithData().call(tx);
 
     return {
@@ -260,15 +237,7 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
   async getWhitelistedPoolsByAccountWithData(
     account: string,
     tx?: NonPayableTx
-  ): Promise<{
-    indexes: BN[],
-    pools: Pool[],
-    totalSupply: BN[],
-    totalBorrow: BN[],
-    underlyingTokens: string[][],
-    underlyingSymbols: string[][],
-    errored: boolean[],
-  }> {
+  ): Promise<PoolsData> {
     const raw = await this.contract.methods.getWhitelistedPoolsByAccountWithData(account).call(tx);
 
     return {
@@ -340,15 +309,7 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
     indexes: (number | string | BN)[],
     pools: Pool[],
     tx?: NonPayableTx
-  ): Promise<{
-    indexes: BN[];
-    pools: Pool[];
-    totalSupply: BN[];
-    totalBorrow: BN[];
-    underlyingTokens: string[][];
-    underlyingSymbols: string[][];
-    errored: boolean[];
-  }> {
+  ): Promise<PoolsData> {
     const poolsSerialized: [
       string,
       string,
@@ -372,15 +333,7 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
 
   async getPublicPoolsWithData(
     tx?: NonPayableTx
-  ): Promise<{
-    indexes: BN[];
-    pools: Pool[];
-    totalSupply: BN[];
-    totalBorrow: BN[];
-    underlyingTokens: string[][];
-    underlyingSymbols: string[][];
-    errored: boolean[];
-  }> {
+  ): Promise<PoolsData> {
     const raw = await this.contract.methods.getPublicPoolsWithData().call(tx);
 
     return {

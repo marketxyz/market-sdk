@@ -181,3 +181,13 @@ export function normalizeCTokenOwnership(raw: {
     fuseAdminHasRights: raw[3],
   };
 }
+
+export interface PoolsData {
+  indexes: BN[];
+  pools: Pool[];
+  totalSupply: BN[];
+  totalBorrow: BN[];
+  underlyingTokens: string[][];
+  underlyingSymbols: string[][];
+  errored: boolean[];
+};
