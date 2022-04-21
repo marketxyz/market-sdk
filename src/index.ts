@@ -8,6 +8,7 @@ import Addrs from "./constants/addrs";
 export * from "./lib/Pool";
 export * from "./lib/PoolLens";
 export * from "./lib/PoolDirectory";
+export * from "./lib/JumpRateModel";
 
 export {
   Comptroller,
