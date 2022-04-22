@@ -14,6 +14,7 @@ import Addrs from "../constants/addrs";
 export interface MarketOptions {
   poolDirectory: string;
   poolLens: string;
+  blocksPerMin: number;
 };
 
 class MarketSDK {
@@ -46,7 +47,8 @@ class MarketSDK {
       const chainId = await this.web3.eth.getChainId();
       this.options = {
         poolDirectory: Addrs[chainId as keyof typeof Addrs].v1.poolDirectory,
-        poolLens: Addrs[chainId as keyof typeof Addrs].v1.poolLens
+        poolLens: Addrs[chainId as keyof typeof Addrs].v1.poolLens,
+        blocksPerMin: Addrs[chainId as keyof typeof Addrs].blocksPerMin
       } 
     }
 
