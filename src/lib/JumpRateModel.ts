@@ -1,3 +1,4 @@
+import Web3 from "web3";
 import MarketSDK from "./MarketSDK";
 import { JumpRateModel as JumpRateModelWeb3Interface } from "../types/JumpRateModel";
 import JumpRateModelArtifact from "../abi/JumpRateModel.json";
@@ -51,31 +52,31 @@ class JumpRateModelV1 extends MarketContract<JumpRateModelWeb3Interface> {
     if (utilizationRate.lte(kink)) {
       return utilizationRate
         .mul(multiplierPerBlock)
-        .div(this.sdk.web3.utils.toBN(1e18))
+        .div(Web3.utils.toBN(1e18))
         .add(baseRatePerBlock);
     } else {
       const normalRate = kink.mul(multiplierPerBlock!)
-        .div(this.sdk.web3.utils.toBN(1e18))
+        .div(Web3.utils.toBN(1e18))
         .add(baseRatePerBlock);
       const excessUtil = utilizationRate.sub(kink);
 
       return excessUtil
         .mul(jumpMultiplierPerBlock)
-        .div(this.sdk.web3.utils.toBN(1e18))
+        .div(Web3.utils.toBN(1e18))
         .add(normalRate);
     }
   }
   _getSupplyRate(utilizationRate: BN, reserveFactorMantissa: BN, kink: BN, multiplierPerBlock: BN, baseRatePerBlock: BN, jumpMultiplierPerBlock: BN) {
     const oneMinusReserveFactor = this.sdk.web3.utils
       .toBN(1e18)
-      .sub(this.sdk.web3.utils.toBN(reserveFactorMantissa.toString()));
+      .sub(Web3.utils.toBN(reserveFactorMantissa.toString()));
     const borrowRate = this._getBorrowRate(utilizationRate, kink, multiplierPerBlock, baseRatePerBlock, jumpMultiplierPerBlock);
 
     const rateToPool = borrowRate
       .mul(oneMinusReserveFactor)
-      .div(this.sdk.web3.utils.toBN(1e18));
+      .div(Web3.utils.toBN(1e18));
 
-    return utilizationRate.mul(rateToPool).div(this.sdk.web3.utils.toBN(1e18));
+    return utilizationRate.mul(rateToPool).div(Web3.utils.toBN(1e18));
   }
 
   async convertIRMtoCurve(cToken: CToken) {
@@ -101,12 +102,12 @@ class JumpRateModelV1 extends MarketContract<JumpRateModelWeb3Interface> {
         (Math.pow(
           (Number(
             this._getSupplyRate(
-              this.sdk.web3.utils.toBN((i * 1e16).toString()),
-              this.sdk.web3.utils.toBN(reserveFactorMantissa),
-              this.sdk.web3.utils.toBN(kink),
-              this.sdk.web3.utils.toBN(multiplierPerBlock),
-              this.sdk.web3.utils.toBN(baseRatePerBlock),
-              this.sdk.web3.utils.toBN(jumpMultiplierPerBlock)
+              Web3.utils.toBN((i * 1e16).toString()),
+              Web3.utils.toBN(reserveFactorMantissa),
+              Web3.utils.toBN(kink),
+              Web3.utils.toBN(multiplierPerBlock),
+              Web3.utils.toBN(baseRatePerBlock),
+              Web3.utils.toBN(jumpMultiplierPerBlock)
             ).toString(),
           ) /
             1e18) *
@@ -121,11 +122,11 @@ class JumpRateModelV1 extends MarketContract<JumpRateModelWeb3Interface> {
         (Math.pow(
           (Number(
             this._getBorrowRate(
-              this.sdk.web3.utils.toBN((i * 1e16).toString()),
-              this.sdk.web3.utils.toBN(kink),
-              this.sdk.web3.utils.toBN(multiplierPerBlock),
-              this.sdk.web3.utils.toBN(baseRatePerBlock),
-              this.sdk.web3.utils.toBN(jumpMultiplierPerBlock)
+              Web3.utils.toBN((i * 1e16).toString()),
+              Web3.utils.toBN(kink),
+              Web3.utils.toBN(multiplierPerBlock),
+              Web3.utils.toBN(baseRatePerBlock),
+              Web3.utils.toBN(jumpMultiplierPerBlock)
             ).toString(),
           ) /
             1e18) *

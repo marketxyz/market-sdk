@@ -1,15 +1,6 @@
 import Web3 from "web3";
-import BN from "bn.js";
-
-import Comptroller from "./Comptroller";
+import { Addrs } from "..";
 import MarketAdmin from "./MarketAdmin";
-import CToken from "./CToken";
-import { PoolDirectoryV1, PoolDirectoryV2 } from "./PoolDirectory";
-
-import { Pool, PoolAsset } from "./Pool";
-import { PoolLensV1, PoolLensV2 } from "./PoolLens";
-
-import Addrs from "../constants/addrs";
 
 export interface MarketOptions {
   poolDirectory: string;
@@ -21,71 +12,31 @@ class MarketSDK {
   readonly web3: Web3;
   options?: MarketOptions;
 
-  poolDirectory: {
-    v1?: PoolDirectoryV1,
-    v2?: PoolDirectoryV2
-  } = {};
-
-  lens: {
-    v1?: PoolLensV1,
-    v2?: PoolLensV2
-  } = {};
-
   constructor(web3: Web3, options?: MarketOptions){
     this.web3 = web3;
     this.options = options;
   }
-
-  private checkInit(){
-    if(!this.poolDirectory || !this.lens.v1){
-      throw new Error("MarketSDK not initialized");
-    }
-  }
-
-  async init(){
-    if(!this.options){
-      const chainId = await this.web3.eth.getChainId();
-      this.options = {
-        poolDirectory: Addrs[chainId as keyof typeof Addrs].v1.poolDirectory,
-        poolLens: Addrs[chainId as keyof typeof Addrs].v1.poolLens,
-        blocksPerMin: Addrs[chainId as keyof typeof Addrs].blocksPerMin
-      } 
-    }
-
-    this.lens.v1 = new PoolLensV1(this, this.options.poolLens);
-    this.poolDirectory.v1 = new PoolDirectoryV1(this, this.options.poolDirectory);
-  }
-
-  getAllPools(): Promise<{
-    indexes: BN[];
-    pools: Pool[];
-    totalSupply: BN[];
-    totalBorrow: BN[];
-    underlyingTokens: string[][];
-    underlyingSymbols: string[][];
-    errored: boolean[];
-  }> {
-    this.checkInit();
-    return this.lens.v1!.getPublicPoolsWithData();
-  }
-
-  getPoolsByOwner(owner: string){
-    // TODO: implement
-  }
-
-  getPoolAssetsWithData(comptroller: Comptroller | string): Promise<PoolAsset[]> {
-    this.checkInit();
-    return this.lens.v1!.getPoolAssetsWithData(comptroller);
-  }
-
-  getCToken(address: string): CToken {
-    return new CToken(this, address);
-  }
-
   isMarketAdmin(address: string): Promise<boolean> {
     return new MarketAdmin(this, address).isMarketAdmin();
   }
+  async init(){
+    if(!this.options){
+      const chainId = await this.web3.eth.getChainId() as keyof typeof Addrs;
 
+      this.options = {
+        // @ts-ignore
+        poolDirectory: Addrs[chainId].v2.poolDirectory,
+        // @ts-ignore
+        poolLens: Addrs[chainId].v2.poolLens,
+        blocksPerMin: Addrs[chainId].blocksPerMin
+      };
+    }
+  }
+  checkInit(){
+    if(!this.options){
+      throw new Error("SDK not initialized");
+    }
+  }
   static async init(web3: Web3, options?: MarketOptions){
     const sdk = new MarketSDK(web3, options);
     await sdk.init();
