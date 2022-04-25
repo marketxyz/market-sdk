@@ -290,10 +290,10 @@ class PoolLensV2 extends MarketContract<PoolLensV2Web3Interface> {
 
   async directory(
     tx?: NonPayableTx
-  ): Promise<PoolDirectoryV1> {
+  ): Promise<PoolDirectoryV2> {
     const diirectoryAddress = await this.contract.methods.directory().call(tx);
 
-    return new PoolDirectoryV1(this.sdk, diirectoryAddress);
+    return new PoolDirectoryV2(this.sdk, diirectoryAddress);
   }
 
   // async directoryV2(
