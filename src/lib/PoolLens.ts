@@ -9,9 +9,9 @@ import PoolLensV1Artifact from "../abi/PoolLens.json";
 import { PoolLensV2 as PoolLensV2Web3Interface } from "../types/PoolLensV2";
 import PoolLensV2Artifact from "../abi/PoolLensV2.json";
 
-import Comptroller from "./Comptroller";
-import CToken from "./CToken";
-import { PoolDirectoryV1, PoolDirectoryV2 } from "./PoolDirectory";
+import { Comptroller } from "./Comptroller";
+import { CToken } from "./CToken";
+import { PoolDirectoryV2 } from "./PoolDirectory";
 
 import {
   Pool,

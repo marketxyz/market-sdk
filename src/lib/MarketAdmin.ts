@@ -6,7 +6,7 @@ import MarketAdminArtifact from "../abi/MarketAdmin.json";
 
 import { MarketAdmin as MarketAdminWeb3Interface } from "../types/MarketAdmin";
 import { NonPayableTx } from "../types/types";
-import Comptroller from "./Comptroller";
+import { Comptroller } from "./Comptroller";
 import MarketSDK from "./MarketSDK";
 
 class MarketAdmin extends MarketContract<MarketAdminWeb3Interface> {

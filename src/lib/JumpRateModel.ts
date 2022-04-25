@@ -1,10 +1,12 @@
 import Web3 from "web3";
+import BN from "bn.js";
+
 import MarketSDK from "./MarketSDK";
 import { JumpRateModel as JumpRateModelWeb3Interface } from "../types/JumpRateModel";
 import JumpRateModelArtifact from "../abi/JumpRateModel.json";
+
 import MarketContract from "./MarketContract";
-import BN from "bn.js";
-import CToken from "./CToken";
+import { CToken } from "./CToken";
 
 class JumpRateModelV1 extends MarketContract<JumpRateModelWeb3Interface> {
   constructor(sdk: MarketSDK, address: string) {

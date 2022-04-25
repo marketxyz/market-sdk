@@ -1,6 +1,6 @@
 import BN from "bn.js";
-import Comptroller from "./Comptroller";
-import CToken from "./CToken";
+import { Comptroller } from "./Comptroller";
+import { CToken } from "./CToken";
 import MarketSDK from "./MarketSDK";
 
 export interface Pool {
