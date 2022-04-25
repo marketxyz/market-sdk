@@ -27,4 +27,10 @@ export default {
     },
     blocksPerMin: 60 / 18,
   },
+  1313161554: {
+    v2: {
+
+    },
+    blocksPerMin: 60 / 1.3,
+  }
 };
