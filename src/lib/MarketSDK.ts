@@ -23,15 +23,28 @@ class MarketSDK {
     if(!this.options){
       const chainId = await this.web3.eth.getChainId() as keyof typeof Addrs;
 
-      this.options = {
-        // @ts-ignore
-        poolDirectory: Addrs[chainId].v2.poolDirectory,
-        // @ts-ignore
-        poolLens: Addrs[chainId].v2.poolLens,
-        blocksPerMin: Addrs[chainId].blocksPerMin
-      };
+      // @ts-ignore
+      if (Addrs[chainId].v2) {
+        this.options = {
+          // @ts-ignore
+          poolDirectory: Addrs[chainId].v2.poolDirectory,
+          // @ts-ignore
+          poolLens: Addrs[chainId].v2.poolLens,
+          blocksPerMin: Addrs[chainId].blocksPerMin
+        };
+      // @ts-ignore
+      } else if(Addrs[chainId].v1) {
+        this.options = {
+          // @ts-ignore
+          poolDirectory: Addrs[chainId].v1.poolDirectory,
+          // @ts-ignore
+          poolLens: Addrs[chainId].v1.poolLens,
+          blocksPerMin: Addrs[chainId].blocksPerMin
+        };
+      }
     }
   }
+
   checkInit(){
     if(!this.options){
       throw new Error("SDK not initialized");
