@@ -29,6 +29,8 @@ export interface MarketLens extends BaseContract {
   ): MarketLens;
   clone(): MarketLens;
   methods: {
+    getAllPoolsLength(directory: string): NonPayableTransactionObject<string>;
+
     getPoolAssetsWithData(
       comptroller: string
     ): NonPayableTransactionObject<
@@ -110,6 +112,18 @@ export interface MarketLens extends BaseContract {
       1: string;
       2: string;
     }>;
+
+    getPublicPoolsWithData(directory: string): NonPayableTransactionObject<{
+      0: string[];
+      1: [string, string, string, string, string][];
+      2: string[];
+      3: string[];
+      4: string[][];
+      5: string[][];
+      6: boolean[];
+    }>;
+
+    wrappedNative(): NonPayableTransactionObject<string>;
   };
   events: {
     allEvents(options?: EventOptions, cb?: Callback<EventLog>): EventEmitter;

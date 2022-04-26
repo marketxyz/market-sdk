@@ -7,12 +7,19 @@ import { MarketLens as MarketLensWeb3Interface } from "../types/MarketLens";
 import MarketLensArtifact from "../abi/PoolLens.json";
 
 import { ComptrollerV2 } from "./Comptroller";
-import { normalizePoolAsset, normalizePoolUser, PoolAsset, PoolUser } from "./Pool";
+import { normalizePool, normalizePoolAsset, normalizePoolUser, Pool, PoolAsset, PoolUser } from "./Pool";
 import { NonPayableTx } from "../types/types";
 
 class MarketLens extends MarketContract<MarketLensWeb3Interface> {
   constructor(sdk: MarketSDK, address: string){
     super(sdk, address, MarketLensArtifact.abi);
+  }
+
+  getAllPoolsLength(
+    directory: string,
+    tx?: NonPayableTx
+  ): Promise<string> {
+    return this.contract.methods.getAllPoolsLength(directory).call(tx);
   }
 
   async getPoolAssetsWithData(
@@ -29,7 +36,6 @@ class MarketLens extends MarketContract<MarketLensWeb3Interface> {
     }
     return assets;
   }
-
   
   async getPoolSummary(
     comptroller: ComptrollerV2 | string,
@@ -91,7 +97,37 @@ class MarketLens extends MarketContract<MarketLensWeb3Interface> {
       new BN(raw[2]),
     ];
   }
-}
 
+  async getPublicPoolsWithData(
+    directory: string,
+    tx?: NonPayableTx
+  ): Promise<{
+    indexes: BN[];
+    pools: Pool[];
+    totalSupply: BN[];
+    totalBorrow: BN[];
+    underlyingTokens: string[][];
+    underlyingSymbols: string[][];
+    errored: boolean[];
+  }> {
+    const raw = await this.contract.methods.getPublicPoolsWithData(directory).call(tx);
+
+    return {
+      indexes: raw[0].map(el => new BN(el)),
+      pools: raw[1].map(el => normalizePool(el, this.sdk)),
+      totalSupply: raw[2].map(el => new BN(el)),
+      totalBorrow: raw[3].map(el => new BN(el)),
+      underlyingTokens: raw[4],
+      underlyingSymbols: raw[5],
+      errored: raw[6]
+    };
+  }
+
+  wrappedNative(
+    tx?: NonPayableTx
+  ): Promise<string> {
+    return this.contract.methods.wrappedNative().call(tx);
+  }
+}
 
 export { MarketLens };
