@@ -48,7 +48,7 @@ export interface PoolAsset {
   underlyingToken: string;
   underlyingName: string;
   underlyingSymbol: string;
-  underlyinDecimals: BN;
+  underlyingDecimals: BN;
   underlyingBalance: BN;
   supplyRatePerBlock: BN;
   borrowRatePerBlock: BN;
@@ -95,7 +95,7 @@ export function normalizePoolAsset(raw: {
     underlyingToken: raw[1],
     underlyingName: raw[2],
     underlyingSymbol: raw[3],
-    underlyinDecimals: new BN(raw[4]),
+    underlyingDecimals: new BN(raw[4]),
     underlyingBalance: new BN(raw[5]),
     supplyRatePerBlock: new BN(raw[6]),
     borrowRatePerBlock: new BN(raw[7]),

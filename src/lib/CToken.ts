@@ -64,7 +64,7 @@ class CToken extends MarketContract<CTokenWeb3Interface> {
     return this.contract.methods._setFuseFee().send(tx);
   }
 
-  _setInterestRateModal(
+  _setInterestRateModel(
     newInterestRateModel: string, // change to InterestRateModel class later
     tx?: NonPayableTx
   ): PromiEvent<TransactionReceipt> {
