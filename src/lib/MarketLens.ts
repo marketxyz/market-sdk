@@ -4,7 +4,7 @@ import MarketSDK from "./MarketSDK";
 import MarketContract from "./MarketContract";
 
 import { MarketLens as MarketLensWeb3Interface } from "../types/MarketLens";
-import MarketLensArtifact from "../abi/PoolLens.json";
+import MarketLensArtifact from "../abi/MarketLens.json";
 
 import { ComptrollerV2 } from "./Comptroller";
 import { normalizePool, normalizePoolAsset, normalizePoolUser, Pool, PoolAsset, PoolUser } from "./Pool";

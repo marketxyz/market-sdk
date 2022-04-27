@@ -424,7 +424,7 @@ class CTokenV2 extends MarketContract<CTokenV2Web3Interface> {
     return this.contract.methods._setAdminFee(newAdminFeeMantissa).send(tx);
   }
   
-  _setInterestRateModal(
+  _setInterestRateModel(
     newInterestRateModel: string, // change to InterestRateModel class later
     tx?: NonPayableTx
   ): PromiEvent<TransactionReceipt> {
