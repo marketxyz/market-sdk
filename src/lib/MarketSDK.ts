@@ -5,6 +5,7 @@ import MarketAdmin from "./MarketAdmin";
 export interface MarketOptions {
   poolDirectory: string;
   poolLens: string;
+  marketLens: string;
   blocksPerMin: number;
 };
 
@@ -30,6 +31,8 @@ class MarketSDK {
           poolDirectory: Addrs[chainId].v2.poolDirectory,
           // @ts-ignore
           poolLens: Addrs[chainId].v2.poolLens,
+          // @ts-ignore
+          marketLens: Addrs[chainId].v2.marketLens,
           blocksPerMin: Addrs[chainId].blocksPerMin
         };
       // @ts-ignore
@@ -39,6 +42,8 @@ class MarketSDK {
           poolDirectory: Addrs[chainId].v1.poolDirectory,
           // @ts-ignore
           poolLens: Addrs[chainId].v1.poolLens,
+          // @ts-ignore
+          marketLens: Addrs[chainId].v1.marketLens,
           blocksPerMin: Addrs[chainId].blocksPerMin
         };
       }
