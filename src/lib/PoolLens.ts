@@ -103,14 +103,14 @@ class PoolLensV1 extends MarketContract<PoolLensV1Web3Interface> {
     account: string,
     tx?: NonPayableTx
   ): Promise<{
-    suppluBalance: BN,
+    supplyBalance: BN,
     borrowBalance: BN
   }> {
     comptroller = comptroller instanceof Comptroller ? comptroller.address : comptroller;
     const raw = await this.contract.methods.getPoolUserSummary(comptroller, account).call(tx);
 
     return {
-      suppluBalance: new BN(raw[0]),
+      supplyBalance: new BN(raw[0]),
       borrowBalance: new BN(raw[1]),
     };
   }
