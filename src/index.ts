@@ -11,6 +11,8 @@ export * from "./lib/Comptroller";
 export * from "./lib/CToken";
 export * from "./lib/MarketLens";
 
+export * from "./utils/errors";
+
 export {
   MarketAdmin,
   MarketContract,
