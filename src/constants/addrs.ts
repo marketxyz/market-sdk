@@ -37,5 +37,12 @@ export default {
       marketLens: "0x342931c133F48Ca802f7CaeB5276c3CF176E645E"
     },
     blocksPerMin: 60 / 1.3,
+  },
+  56: {
+    v2: {
+      poolDirectory: "0x935e8d53E1Fd20cc183b033C80c4dCAdDEe5b44f",
+      marketLens: "0x210372e05eAf6B35bac3E797E8A9229089D78Ba9"
+    },
+    blocksPerMin: 60 / 3,
   }
 };
