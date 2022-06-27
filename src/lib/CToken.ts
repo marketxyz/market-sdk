@@ -191,6 +191,13 @@ class CToken extends MarketContract<CTokenWeb3Interface> {
   ): Promise<string> {
     return this.contract.methods.borrowRatePerBlock().call(tx);
   }
+
+  async comptroller(
+    tx?: NonPayableTx
+  ): Promise<Comptroller> {
+    const addr = await this.contract.methods.comptroller().call(tx);
+    return new Comptroller(this.sdk, addr);
+  }
   
   decimals(
     tx?: NonPayableTx
@@ -541,6 +548,13 @@ class CTokenV2 extends MarketContract<CTokenV2Web3Interface> {
     return this.contract.methods.borrowRatePerBlock().call(tx);
   }
   
+  async comptroller(
+    tx?: NonPayableTx
+  ): Promise<ComptrollerV2> {
+    const addr = await this.contract.methods.comptroller().call(tx);
+    return new ComptrollerV2(this.sdk, addr);
+  }
+
   decimals(
     tx?: NonPayableTx
   ): Promise<string> {
