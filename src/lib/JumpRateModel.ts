@@ -113,7 +113,7 @@ class JumpRateModelV1 extends MarketContract<JumpRateModelWeb3Interface> {
             ).toString(),
           ) /
             1e18) *
-            (this.sdk.options!.blocksPerMin * 60 * 24) +
+            (this.sdk.options!.blocksPerMin! * 60 * 24) +
             1,
           365,
         ) -
@@ -132,7 +132,7 @@ class JumpRateModelV1 extends MarketContract<JumpRateModelWeb3Interface> {
             ).toString(),
           ) /
             1e18) *
-            (this.sdk.options!.blocksPerMin * 60 * 24) +
+            (this.sdk.options!.blocksPerMin! * 60 * 24) +
             1,
           365,
         ) -

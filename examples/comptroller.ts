@@ -9,7 +9,7 @@ import { DEFAULT_RPC, getPrivateKey } from "./utils";
     const web3 = new Web3(provider);
     const sdk = await MarketSDK.init(web3);
 
-    const directory = new PoolDirectoryV1(sdk, sdk.options!.poolDirectory);
+    const directory = new PoolDirectoryV1(sdk, sdk.options!.poolDirectory!);
     const pools = await directory.getAllPools();
     const comptroller = pools[0].comptroller;
     const admin = await comptroller.admin();

@@ -11,9 +11,9 @@ export interface MarketOptions {
 
 class MarketSDK {
   readonly web3: Web3;
-  options?: MarketOptions;
+  options?: Partial<MarketOptions>;
 
-  constructor(web3: Web3, options?: MarketOptions){
+  constructor(web3: Web3, options?: Partial<MarketOptions>){
     this.web3 = web3;
     this.options = options;
   }
@@ -55,7 +55,7 @@ class MarketSDK {
       throw new Error("SDK not initialized");
     }
   }
-  static async init(web3: Web3, options?: MarketOptions){
+  static async init(web3: Web3, options?: Partial<MarketOptions>){
     const sdk = new MarketSDK(web3, options);
     await sdk.init();
 

@@ -10,6 +10,7 @@ export * from "./lib/JumpRateModel";
 export * from "./lib/Comptroller";
 export * from "./lib/CToken";
 export * from "./lib/MarketLens";
+export * from "./lib/MarketSDK";
 
 export * from "./utils/errors";
 
