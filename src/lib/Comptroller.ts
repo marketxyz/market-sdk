@@ -337,9 +337,9 @@ class Comptroller extends MarketContract<ComptrollerWeb3Interface> {
     account: string,
     cTokenModify: CToken | string,
     tx?: NonPayableTx
-  ): PromiEvent<TransactionReceipt> {
+  ): Promise<{ 0: string, 1: string }> {
     cTokenModify = cTokenModify instanceof CToken ? cTokenModify.address : cTokenModify;
-    return this.contract.methods.getMaxRedeem(account, cTokenModify).send(tx);
+    return this.contract.methods.getMaxRedeem(account, cTokenModify).call(tx);
   }
 
   getWhitelist(
