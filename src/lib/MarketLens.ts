@@ -4,11 +4,15 @@ import MarketSDK from "./MarketSDK";
 import MarketContract from "./MarketContract";
 
 import { MarketLens as MarketLensWeb3Interface } from "../types/MarketLens";
+import { MarketLensSecondary as MarketLensSecondaryWeb3Interface } from "../types/MarketLensSecondary";
 import MarketLensArtifact from "../abi/MarketLens.json";
+import MarketLensSecondaryArtifact from "../abi/MarketLensSecondary.json";
 
 import { ComptrollerV2 } from "./Comptroller";
-import { normalizePool, normalizePoolAsset, normalizePoolUser, Pool, PoolAsset, PoolUser } from "./Pool";
+import { CTokenOwnership, normalizePool, normalizePoolAsset, normalizePoolUser, Pool, PoolAsset, PoolUser } from "./Pool";
 import { NonPayableTx } from "../types/types";
+import { CTokenV2 } from "./CToken";
+import { PoolDirectoryV2 } from "./PoolDirectory";
 
 class MarketLens extends MarketContract<MarketLensWeb3Interface> {
   constructor(sdk: MarketSDK, address: string){
@@ -130,4 +134,145 @@ class MarketLens extends MarketContract<MarketLensWeb3Interface> {
   }
 }
 
-export { MarketLens };
+class MarketLensSecondary extends MarketContract<MarketLensSecondaryWeb3Interface> {
+  constructor(sdk: MarketSDK, address: string){
+    super(sdk, address, MarketLensSecondaryArtifact.abi);
+  }
+ 
+  async getPoolOwnership(
+    comptroller: ComptrollerV2 | string,
+    tx?: NonPayableTx
+  ): Promise<{
+    comptrollerAdmin: string,
+    comptrollerAdminHasRights: boolean,
+    comptrollerFuseAdminHasRights: boolean,
+    outliners: CTokenOwnership[],
+  }> {
+    comptroller = comptroller instanceof ComptrollerV2 ? comptroller.address : comptroller;
+
+    const raw = await this.contract.methods.getPoolOwnership(comptroller).call(tx);
+    const outlinersRaw = raw[3];
+    const outliners: CTokenOwnership[] = [];
+
+    for(const outliner of outlinersRaw){
+      outliners.push({
+        cToken: new CTokenV2(this.sdk, outliner[0]),
+        admin: outliner[1],
+        admingHasRights: outliner[2],
+        fuseAdminHasRights: outliner[3],
+      });
+    }
+
+    return {
+      comptrollerAdmin: raw[0],
+      comptrollerAdminHasRights: raw[1],
+      comptrollerFuseAdminHasRights: raw[2],
+      outliners: outliners
+    };
+  }
+
+  getMaxRedeem(
+    account: string,
+    cTokenModify: CTokenV2 | string,
+    tx?: NonPayableTx
+  ): Promise<string> {
+    cTokenModify = cTokenModify instanceof CTokenV2 ? cTokenModify.address : cTokenModify;
+    return this.contract.methods.getMaxRedeem(account, cTokenModify).call(tx);
+  }
+  
+  getMaxBorrow(
+    account: string,
+    cTokenModify: CTokenV2 | string,
+    tx?: NonPayableTx
+  ): Promise<string> {
+    cTokenModify = cTokenModify instanceof CTokenV2 ? cTokenModify.address : cTokenModify;
+    return this.contract.methods.getMaxBorrow(account, cTokenModify).call(tx);
+  }
+
+  async getRewardSpeedsByPool(
+    comptroller: ComptrollerV2 | string,
+    tx?: NonPayableTx
+  ): Promise<{
+    allMarkets: CTokenV2[],
+    distributors: string[],
+    rewardTokens: string[],
+    supplySpeeds: string[][],
+    borrowSpeeds: string[][]
+  }> {
+    comptroller = comptroller instanceof ComptrollerV2 ? comptroller.address : comptroller;
+    const raw = await this.contract.methods.getRewardSpeedsByPool(comptroller).call(tx);
+
+    return {
+      allMarkets: raw[0].map(el => new CTokenV2(this.sdk, el)),
+      distributors: raw[1],
+      rewardTokens: raw[2],
+      supplySpeeds: raw[3],
+      borrowSpeeds: raw[4]
+    };
+  }
+
+  async getRewardSpeedsByPools(
+    comptrollers: ComptrollerV2[] | string[],
+    tx?: NonPayableTx
+  ): Promise<{
+    allMarkets: CTokenV2[][],
+    distributors: string[][],
+    rewardTokens: string[][],
+    supplySpeeds: string[][][],
+    borrowSpeeds: string[][][]
+  }> {
+    const comptrollersAddresses = comptrollers.map(el => el instanceof ComptrollerV2 ? el.address : el);
+
+    const raw = await this.contract.methods.getRewardSpeedsByPools(comptrollersAddresses).call(tx);
+
+    return {
+      allMarkets: raw[0].map(el => el.map(el2 => new CTokenV2(this.sdk, el2))),
+      distributors: raw[1],
+      rewardTokens: raw[2],
+      supplySpeeds: raw[3],
+      borrowSpeeds: raw[4]
+    };
+  }
+
+  async getUnclaimedRewardsByDistributors(
+    holder: string,
+    distributors: string[]
+  ): Promise<{
+    rewardTokens: string[],
+    commpUnclaimedTotal: string[],
+    allMarkets: CTokenV2[][],
+    rewardsUnaccrued: string[][][],
+    distributorFunds: string[]
+  }> {
+    const raw = await this.contract.methods.getUnclaimedRewardsByDistributors(holder, distributors).call();
+
+    return {
+      rewardTokens: raw[0],
+      commpUnclaimedTotal: raw[1],
+      allMarkets: raw[2].map(el => el.map(el2 => new CTokenV2(this.sdk, el2))),
+      rewardsUnaccrued: raw[3],
+      distributorFunds: raw[4]
+    };
+  }
+
+  async getRewardsDistributorsBySupplier(
+    directory: PoolDirectoryV2 | string,
+    supplier: string,
+    tx?: NonPayableTx
+  ): Promise<{
+    indexes: string[],
+    comptrollers: ComptrollerV2[],
+    distributors: string[][]
+  }> {
+    directory = directory instanceof PoolDirectoryV2 ? directory.address : directory;
+    const raw = await this.contract.methods.getRewardsDistributorsBySupplier(directory, supplier).call(tx);
+
+    return {
+      indexes: raw[0],
+      comptrollers: raw[1].map(el => new ComptrollerV2(this.sdk, el)),
+      distributors: raw[2]
+    };
+  }
+}
+
+export { MarketLens, MarketLensSecondary };

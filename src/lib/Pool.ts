@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { Comptroller } from "./Comptroller";
-import { CToken } from "./CToken";
+import { CToken, CTokenV2 } from "./CToken";
 import MarketSDK from "./MarketSDK";
 
 export interface Pool {
@@ -162,7 +162,7 @@ export function normalizePoolUser(raw: {
 }
 
 export interface CTokenOwnership {
-  cToken: CToken;
+  cToken: CToken | CTokenV2;
   admin: string;
   admingHasRights: boolean;
   fuseAdminHasRights: boolean;
